@@ -4,29 +4,32 @@ services:
   zookeeper-1:
     container_name: zookeeper-1
     image: confluentinc/cp-zookeeper:latest
-    ports:
-      - 22181:2181
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+      ZOOKEEPER_CLIENT_PORT: 22181
       ZOOKEEPER_TICK_TIME: 2000
+    network_mode: host
 
   zookeeper-2:
     container_name: zookeeper-2
     image: confluentinc/cp-zookeeper:latest
-    ports:
-      - 32181:2181
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+      ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
+    network_mode: host
 
   zookeeper-3:
     container_name: zookeeper-3
     image: confluentinc/cp-zookeeper:latest
-    ports:
-      - 42181:2181
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+      ZOOKEEPER_CLIENT_PORT: 42181
       ZOOKEEPER_TICK_TIME: 2000
+    network_mode: host
 
   broker-1:
     container_name: broker-1
@@ -37,10 +40,9 @@ services:
       [zookeeper-1, zookeeper-2, zookeeper-3]
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
+    network_mode: host
 
   broker-2:
     container_name: broker-2
@@ -51,10 +53,9 @@ services:
       [zookeeper-1, zookeeper-2, zookeeper-3]
     environment:
       KAFKA_BROKER_ID: 2
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-2:9092,PLAINTEXT_HOST://localhost:39092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:39092
+    network_mode: host
 
   broker-3:
     container_name: broker-3
@@ -65,7 +66,6 @@ services:
       [zookeeper-1, zookeeper-2, zookeeper-3]
     environment:
       KAFKA_BROKER_ID: 3
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-3:9092,PLAINTEXT_HOST://localhost:49092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:49092
+    network_mode: host
